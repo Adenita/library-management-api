@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:latest
+    container_name: lib_db
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: lib_m_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
