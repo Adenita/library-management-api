@@ -3,21 +3,21 @@ import { Loan } from '../../loan/entity/loan.entity';
 
 @Entity({ name: 'users' })
 export class User {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({length: 100})
-    name: string;
+  @Column({ length: 100 })
+  name: string;
 
-    @Column({length: 100})
-    username: string;
+  @Column({ length: 100 })
+  username: string;
 
-    @Column({length: 500})
-    password: string;
+  @Column({ length: 500 })
+  password: string;
 
-    @Column({length: 100})
-    email: string;
+  @Column({ length: 100 })
+  email: string;
 
-    @OneToMany(() => Loan, (loan) => loan.user)
-    loans: Loan[];
+  @OneToMany(() => Loan, (loan) => loan.user)
+  loans: Loan[];
 }

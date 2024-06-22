@@ -1,4 +1,10 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Book } from '../../book/entity/book.entity';
 
 @Entity()
@@ -6,10 +12,10 @@ export class Author {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({length: 100})
+  @Column({ length: 100 })
   name: string;
 
-  @ManyToMany(() => Book, book => book.authors)
-  @JoinTable({name: 'author_books'})
+  @ManyToMany(() => Book, (book) => book.authors)
+  @JoinTable({ name: 'author_books' })
   books: Book[];
 }
