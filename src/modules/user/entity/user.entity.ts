@@ -1,5 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Loan } from '../../loan/entity/loan.entity';
+import { Role } from './role.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -20,4 +28,8 @@ export class User {
 
   @OneToMany(() => Loan, (loan) => loan.user)
   loans: Loan[];
+
+  @ManyToMany(() => Role)
+  @JoinTable({ name: 'user_roles'})
+  roles: Role[];
 }
