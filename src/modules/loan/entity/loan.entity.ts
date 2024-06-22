@@ -13,15 +13,15 @@ export class Loan {
   @ManyToOne(() => Book, (book) => book.loans)
   book: Book;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  loan_date: Date;
+  @Column({ name: 'loan_date', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  loanDate: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
-  due_date: Date;
+  @Column({ name: 'due_date', type: 'timestamp', nullable: true })
+  dueDate: Date;
 
   @Column({length: 60})
   status: string;
 
-  @Column({ type: 'timestamp', nullable: true })
-  return_date: Date;
+  @Column({ name: 'return_date', type: 'timestamp', nullable: true })
+  returnDate: Date;
 }

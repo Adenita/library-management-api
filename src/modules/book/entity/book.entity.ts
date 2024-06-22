@@ -10,8 +10,8 @@ export class Book {
   @Column({length: 100})
   title: string;
 
-  @Column()
-  available_copies: number;
+  @Column({name: 'available_copies'})
+  availableCopies: number;
 
   @Column({ length: 30 })
   language: string;
