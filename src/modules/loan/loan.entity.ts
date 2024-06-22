@@ -5,7 +5,7 @@ import { Book } from '../book/book.entity';
 @Entity()
 export class Loan {
   @PrimaryGeneratedColumn()
-  loan_id: number;
+  id: number;
 
   @ManyToOne(() => User, (user) => user.loans)
   user: User;
