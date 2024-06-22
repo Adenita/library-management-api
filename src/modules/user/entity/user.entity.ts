@@ -30,6 +30,6 @@ export class User {
   loans: Loan[];
 
   @ManyToMany(() => Role)
-  @JoinTable({ name: 'user_roles'})
+  @JoinTable({ name: 'user_roles' })
   roles: Role[];
 }
