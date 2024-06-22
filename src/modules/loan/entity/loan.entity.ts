@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../../user/entity/user.entity';
 import { Book } from '../../book/entity/book.entity';
+import { Status } from './status';
 
 @Entity()
 export class Loan {
@@ -24,7 +25,7 @@ export class Loan {
   dueDate: Date;
 
   @Column({ length: 60 })
-  status: string;
+  status: Status;
 
   @Column({ name: 'return_date', type: 'timestamp', nullable: true })
   returnDate: Date;
