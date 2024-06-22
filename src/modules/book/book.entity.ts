@@ -8,7 +8,7 @@ export class Book {
   id: string;
 
   @Column()
-  name: string;
+  title: string;
 
   @ManyToMany(() => Author, author => author.books)
   authors: Author[];
