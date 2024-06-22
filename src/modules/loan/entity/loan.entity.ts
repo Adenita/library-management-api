@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../user/user.entity';
-import { Book } from '../book/book.entity';
+import { User } from '../../user/entity/user.entity';
+import { Book } from '../../book/entity/book.entity';
 
 @Entity()
 export class Loan {

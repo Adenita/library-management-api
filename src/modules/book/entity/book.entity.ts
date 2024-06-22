@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Author } from '../author/author.entity';
-import { Loan } from '../loan/loan.entity';
+import { Author } from '../../author/entity/author.entity';
+import { Loan } from '../../loan/entity/loan.entity';
 
 @Entity()
 export class Book {
