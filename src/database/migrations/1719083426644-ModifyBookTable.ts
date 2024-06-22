@@ -6,13 +6,13 @@ export class ModifyBookTable1719083426644 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`ALTER TABLE "book" DROP COLUMN "name"`);
     await queryRunner.query(
-      `ALTER TABLE "book" ADD "title" character varying NOT NULL`,
+      `ALTER TABLE "book" ADD "title" character varying NOT NULL default ''`,
     );
     await queryRunner.query(
-      `ALTER TABLE "book" ADD "available_copies" integer NOT NULL`,
+      `ALTER TABLE "book" ADD "available_copies" integer NOT NULL default ''`,
     );
     await queryRunner.query(
-      `ALTER TABLE "book" ADD "language" character varying NOT NULL`,
+      `ALTER TABLE "book" ADD "language" character varying NOT NULL default ''`,
     );
   }
 
@@ -23,7 +23,7 @@ export class ModifyBookTable1719083426644 implements MigrationInterface {
     );
     await queryRunner.query(`ALTER TABLE "book" DROP COLUMN "title"`);
     await queryRunner.query(
-      `ALTER TABLE "book" ADD "name" character varying NOT NULL`,
+      `ALTER TABLE "book" ADD "name" character varying NOT NULL default ''`,
     );
   }
 }

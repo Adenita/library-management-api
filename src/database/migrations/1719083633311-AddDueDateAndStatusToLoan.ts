@@ -6,7 +6,7 @@ export class ModifyLoanTable1719083633311 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`ALTER TABLE "loan" ADD "due_date" TIMESTAMP`);
     await queryRunner.query(
-      `ALTER TABLE "loan" ADD "status" character varying NOT NULL`,
+      `ALTER TABLE "loan" ADD "status" character varying NOT NULL default ''`,
     );
   }
 

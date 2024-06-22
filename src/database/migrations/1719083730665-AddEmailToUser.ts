@@ -5,7 +5,7 @@ export class AddEmailToUser1719083730665 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "users" ADD "email" character varying NOT NULL`,
+      `ALTER TABLE "users" ADD "email" character varying NOT NULL default ''`,
     );
   }
 
