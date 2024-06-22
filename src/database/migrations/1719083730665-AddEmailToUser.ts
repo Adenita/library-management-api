@@ -8,7 +8,7 @@ export class AddEmailToUser1719083730665 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "book" ADD "name" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "email"`);
     }
 
 }
