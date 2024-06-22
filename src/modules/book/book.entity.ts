@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Author } from '../author/author.entity';
+import { Loan } from '../loan/loan.entity';
 
 @Entity()
 export class Book {
@@ -11,4 +12,7 @@ export class Book {
 
   @ManyToMany(() => Author, author => author.books)
   authors: Author[];
+
+  @OneToMany(() => Loan, (loan) => loan.book)
+  loans: Loan[];
 }
