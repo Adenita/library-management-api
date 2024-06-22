@@ -10,6 +10,12 @@ export class Book {
   @Column()
   title: string;
 
+  @Column()
+  available_copies: number;
+
+  @Column()
+  language: string;
+
   @ManyToMany(() => Author, author => author.books)
   authors: Author[];
 
