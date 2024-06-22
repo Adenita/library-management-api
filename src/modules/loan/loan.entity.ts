@@ -17,5 +17,11 @@ export class Loan {
   loan_date: Date;
 
   @Column({ type: 'timestamp', nullable: true })
+  due_date: Date;
+
+  @Column()
+  status: string;
+
+  @Column({ type: 'timestamp', nullable: true })
   return_date: Date;
 }
