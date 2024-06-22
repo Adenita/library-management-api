@@ -24,7 +24,7 @@ export class Loan {
   @Column({ name: 'due_date', type: 'timestamp', nullable: true })
   dueDate: Date;
 
-  @Column({ length: 60 })
+  @Column({ type: 'varchar', length: 60 })
   status: Status;
 
   @Column({ name: 'return_date', type: 'timestamp', nullable: true })
