@@ -6,16 +6,16 @@ export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({length: 100})
     name: string;
 
-    @Column()
+    @Column({length: 100})
     username: string;
 
-    @Column()
+    @Column({length: 500})
     password: string;
 
-    @Column()
+    @Column({length: 100})
     email: string;
 
     @OneToMany(() => Loan, (loan) => loan.user)

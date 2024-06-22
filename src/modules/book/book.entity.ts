@@ -7,13 +7,13 @@ export class Book {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({length: 100})
   title: string;
 
   @Column()
   available_copies: number;
 
-  @Column()
+  @Column({ length: 30 })
   language: string;
 
   @ManyToMany(() => Author, author => author.books)

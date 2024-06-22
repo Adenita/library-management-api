@@ -19,7 +19,7 @@ export class Loan {
   @Column({ type: 'timestamp', nullable: true })
   due_date: Date;
 
-  @Column()
+  @Column({length: 60})
   status: string;
 
   @Column({ type: 'timestamp', nullable: true })

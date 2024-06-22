@@ -6,7 +6,7 @@ export class Author {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({length: 100})
   name: string;
 
   @ManyToMany(() => Book, book => book.authors)
