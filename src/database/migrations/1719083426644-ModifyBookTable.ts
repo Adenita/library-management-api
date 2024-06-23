@@ -9,7 +9,7 @@ export class ModifyBookTable1719083426644 implements MigrationInterface {
       `ALTER TABLE "book" ADD "title" character varying NOT NULL default ''`,
     );
     await queryRunner.query(
-      `ALTER TABLE "book" ADD "available_copies" integer NOT NULL default ''`,
+      `ALTER TABLE "book" ADD "available_copies" integer NOT NULL default 0`,
     );
     await queryRunner.query(
       `ALTER TABLE "book" ADD "language" character varying NOT NULL default ''`,
