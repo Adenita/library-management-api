@@ -1,19 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UserRepository } from '../../modules/user/repository/user.repository';
+import { RefreshTokenRepository } from '../../modules/user/repository/refresh-token.repository';
+import { User } from '../../modules/user/entity/user.entity';
+import { RefreshToken } from '../../modules/user/entity/refresh-token.entity';
 
 @Injectable()
 export class AuthService {
-  private refreshTokens: string[] = []; // Store refresh tokens in a persistent storage in production
-
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly userRepository: UserRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
+  ) {}
 
   async generateAccessToken(payload: any): Promise<string> {
     return this.jwtService.sign(payload, { secret: 'accessSecretKey', expiresIn: '15m' });
   }
 
-  async generateRefreshToken(payload: any): Promise<string> {
-    const refreshToken = this.jwtService.sign(payload, { secret: 'refreshSecretKey', expiresIn: '7d' });
-    this.refreshTokens.push(refreshToken); // Store refresh token
+  async generateRefreshToken(user: User): Promise<string> {
+    const refreshToken = this.jwtService.sign({ username: user.username }, { secret: 'refreshSecretKey', expiresIn: '7d' });
+
+    const sevenDaysFromNow: number = (Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const expirationDate: Date = new Date(sevenDaysFromNow);
+
+    await this.refreshTokenRepository.save(this.getRefreshToken(refreshToken, user, expirationDate));
+
     return refreshToken;
   }
 
@@ -26,7 +37,8 @@ export class AuthService {
   }
 
   async verifyRefreshToken(token: string): Promise<any> {
-    if (!this.refreshTokens.includes(token)) {
+    const refreshToken = await this.refreshTokenRepository.findOneByToken(token);
+    if (!refreshToken) {
       throw new Error('Invalid refresh token');
     }
     try {
@@ -38,6 +50,22 @@ export class AuthService {
 
   async refreshAccessToken(refreshToken: string): Promise<string> {
     const payload = await this.verifyRefreshToken(refreshToken);
-    return this.generateAccessToken({ username: payload.username });
+    const user = await this.userRepository.findOneByUsername(payload.username);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return this.generateAccessToken({ username: user.username });
+  }
+
+  async revokeRefreshToken(token: string): Promise<void> {
+    await this.refreshTokenRepository.deleteByToken(token);
+  }
+
+  getRefreshToken(refreshToken: string, user: User, expirationDate: Date): RefreshToken {
+    return {
+      token: refreshToken,
+      user,
+      expiresIn: expirationDate
+    } as RefreshToken;
   }
 }
