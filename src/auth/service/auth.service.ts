@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepository } from '../../modules/user/repository/user.repository';
 import { RefreshTokenRepository } from '../../modules/user/repository/refresh-token.repository';
 import { User } from '../../modules/user/entity/user.entity';
 import { RefreshToken } from '../../modules/user/entity/refresh-token.entity';
+import { UserService } from '../../modules/user/service/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly userRepository: UserRepository,
+    private readonly userService: UserService,
     private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
@@ -50,10 +50,7 @@ export class AuthService {
 
   async refreshAccessToken(refreshToken: string): Promise<string> {
     const payload = await this.verifyRefreshToken(refreshToken);
-    const user = await this.userRepository.findByUsername(payload.username);
-    if (!user) {
-      throw new Error('User not found');
-    }
+    const user = await this.userService.findByUsername(payload.username);
     return this.generateAccessToken({ username: user.username });
   }
 
