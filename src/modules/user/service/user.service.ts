@@ -32,9 +32,7 @@ export class UserService {
 
 
   async create(user: User): Promise<User> {
-    const existingUser: User = await this.userRepository.findByUsername(
-      user.username,
-    );
+    const existingUser: User = await this.findByUsername(user.username);
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
@@ -43,7 +41,7 @@ export class UserService {
   }
 
   async update(id: string, user: User): Promise<void> {
-    const updatedUser = await this.userRepository.findById(id);
+    const updatedUser = await this.findById(id);
     if (!updatedUser) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
