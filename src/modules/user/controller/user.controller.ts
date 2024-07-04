@@ -27,14 +27,14 @@ export class UserController {
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<UserShortDto> {
-    const user: User = await this.userService.findById(id);
+    const user: User = await this.userService.findByIdOrThrow(id);
     return UserMapper.toShortDto(user);
   }
 
   @Post()
   async create(@Body() UserCreateDto: UserCreateDto): Promise<UserShortDto> {
     const userToCreate: User = UserMapper.toEntity(UserCreateDto);
-    const userCreated: User = await this.userService.create(userToCreate);
+    const userCreated: User = await this.userService.createOrThrow(userToCreate);
     return UserMapper.toShortDto(userCreated);
   }
 
@@ -44,7 +44,7 @@ export class UserController {
     @Body() UserUpdateDto: UserUpdateDto,
   ): Promise<UserShortDto> {
     const userToUpdate: User = UserMapper.toEntity(UserUpdateDto);
-    await this.userService.update(id, userToUpdate);
+    await this.userService.updateOrThrow(id, userToUpdate);
     return UserMapper.toShortDto(userToUpdate);
   }
 

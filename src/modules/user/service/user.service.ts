@@ -14,7 +14,7 @@ export class UserService {
     return await this.userRepository.findAll();
   }
 
-  async findById(id: string): Promise<User> {
+  async findByIdOrThrow(id: string): Promise<User> {
     const user: User = await this.userRepository.findById(id);
     if (!user) {
       throw new NotFoundException(`User with id: ${id} not found`);
@@ -22,7 +22,7 @@ export class UserService {
     return user;
   }
 
-  async findByUsername(username: string): Promise<User> {
+  async findByUsernameOrThrow(username: string): Promise<User> {
     const user: User = await this.userRepository.findByUsername(username);
     if (!user) {
       throw new NotFoundException(`User with username: ${username} not found`);
@@ -30,8 +30,8 @@ export class UserService {
     return user;
   }
 
-  async create(user: User): Promise<User> {
-    const existingUser: User = await this.findByUsername(user.username);
+  async createOrThrow(user: User): Promise<User> {
+    const existingUser: User = await this.findByUsernameOrThrow(user.username);
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
@@ -39,8 +39,8 @@ export class UserService {
     return await this.userRepository.create(user);
   }
 
-  async update(id: string, user: User): Promise<void> {
-    const updatedUser = await this.findById(id);
+  async updateOrThrow(id: string, user: User): Promise<void> {
+    const updatedUser = await this.findByIdOrThrow(id);
     if (!updatedUser) {
       throw new NotFoundException(`User with id ${id} not found`);
     }

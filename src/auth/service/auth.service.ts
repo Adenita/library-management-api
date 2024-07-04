@@ -59,7 +59,7 @@ export class AuthService {
 
   async refreshAccessToken(refreshToken: string): Promise<string> {
     const payload = await this.verifyRefreshToken(refreshToken);
-    const user = await this.userService.findByUsername(payload.username);
+    const user = await this.userService.findByUsernameOrThrow(payload.username);
     return this.generateAccessToken({ username: user.username });
   }
 
