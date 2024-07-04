@@ -1,8 +1,8 @@
 import { User } from '../entity/user.entity';
 import { Mapper } from '../../../shared/Mapper';
-import { UserShortDto } from '../transport/user-short.dto';
-import { UserCreateDto } from '../transport/user-create.dto';
-import { UserUpdateDto } from '../transport/user-update.dto';
+import { UserShortDto } from '../dto/user-short.dto';
+import { UserCreateDto } from '../dto/user-create.dto';
+import { UserUpdateDto } from '../dto/user-update.dto';
 
 export class UserMapper {
   static toShortDto(user: User) {

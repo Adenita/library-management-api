@@ -8,10 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UserService } from '../service/user.service';
-import { UserCreateDto } from '../transport/user-create.dto';
-import { UserUpdateDto } from '../transport/user-update.dto';
-import { UserListDto } from '../transport/user-list.dto';
-import { UserShortDto } from '../transport/user-short.dto';
+import { UserCreateDto } from '../dto/user-create.dto';
+import { UserUpdateDto } from '../dto/user-update.dto';
+import { UserListDto } from '../dto/user-list.dto';
+import { UserShortDto } from '../dto/user-short.dto';
 import { UserMapper } from '../mapper/user.mapper';
 import { User } from '../entity/user.entity';
 
