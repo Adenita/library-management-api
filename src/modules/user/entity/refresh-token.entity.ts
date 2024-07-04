@@ -9,7 +9,7 @@ export class RefreshToken {
   @Column()
   token: string;
 
-  @ManyToOne(() => User, user => user.id)
+  @ManyToOne(() => User, (user) => user.id)
   user: User;
 
   @Column()

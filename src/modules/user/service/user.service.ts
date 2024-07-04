@@ -30,7 +30,6 @@ export class UserService {
     return user;
   }
 
-
   async create(user: User): Promise<User> {
     const existingUser: User = await this.findByUsername(user.username);
     if (existingUser) {

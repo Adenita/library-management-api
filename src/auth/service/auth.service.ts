@@ -14,16 +14,24 @@ export class AuthService {
   ) {}
 
   async generateAccessToken(payload: any): Promise<string> {
-    return this.jwtService.sign(payload, { secret: 'accessSecretKey', expiresIn: '15m' });
+    return this.jwtService.sign(payload, {
+      secret: 'accessSecretKey',
+      expiresIn: '15m',
+    });
   }
 
   async generateRefreshToken(user: User): Promise<string> {
-    const refreshToken = this.jwtService.sign({ username: user.username }, { secret: 'refreshSecretKey', expiresIn: '7d' });
+    const refreshToken = this.jwtService.sign(
+      { username: user.username },
+      { secret: 'refreshSecretKey', expiresIn: '7d' },
+    );
 
-    const sevenDaysFromNow: number = (Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const sevenDaysFromNow: number = Date.now() + 7 * 24 * 60 * 60 * 1000;
     const expirationDate: Date = new Date(sevenDaysFromNow);
 
-    await this.refreshTokenRepository.save(this.getRefreshToken(refreshToken, user, expirationDate));
+    await this.refreshTokenRepository.save(
+      this.getRefreshToken(refreshToken, user, expirationDate),
+    );
 
     return refreshToken;
   }
@@ -37,7 +45,8 @@ export class AuthService {
   }
 
   async verifyRefreshToken(token: string): Promise<any> {
-    const refreshToken = await this.refreshTokenRepository.findOneByToken(token);
+    const refreshToken =
+      await this.refreshTokenRepository.findOneByToken(token);
     if (!refreshToken) {
       throw new Error('Invalid refresh token');
     }
@@ -58,11 +67,15 @@ export class AuthService {
     await this.refreshTokenRepository.deleteByToken(token);
   }
 
-  getRefreshToken(refreshToken: string, user: User, expirationDate: Date): RefreshToken {
+  getRefreshToken(
+    refreshToken: string,
+    user: User,
+    expirationDate: Date,
+  ): RefreshToken {
     return {
       token: refreshToken,
       user,
-      expiresIn: expirationDate
+      expiresIn: expirationDate,
     } as RefreshToken;
   }
 }
