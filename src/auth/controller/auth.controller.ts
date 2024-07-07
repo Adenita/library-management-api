@@ -5,6 +5,8 @@ import { Key, TokenService } from '../service/token.service';
 import { TokenDto } from '../dto/token.dto';
 import { UserCreateDto } from '../../modules/user/dto/user-create.dto';
 import { UserShortDto } from '../../modules/user/dto/user-short.dto';
+import { User } from '../../modules/user/entity/user.entity';
+import { GeneralMapper } from '../../shared/general.mapper';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +26,8 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() userCreateDto: UserCreateDto): Promise<UserShortDto> {
-    return this.authService.register(userCreateDto);
+    const registeredUser: User = await this.authService.register(userCreateDto);
+    return GeneralMapper.toDto(UserShortDto, registeredUser);
   }
 
   @Post('login')

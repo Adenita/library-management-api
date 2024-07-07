@@ -16,18 +16,16 @@ export class AuthService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async register(userCreateDto: UserCreateDto): Promise<UserShortDto> {
+  async register(userCreateDto: UserCreateDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(userCreateDto.password, 10);
     const newUserDto: UserCreateDto = {
       ...userCreateDto,
       password: hashedPassword,
     };
 
-    const registeredUser = await this.userService.createOrThrow(
+    return await this.userService.createOrThrow(
       GeneralMapper.toEntity(User, newUserDto),
     );
-
-    return GeneralMapper.toDto(UserShortDto, registeredUser);
   }
 
   async login(userLoginDto: UserLoginDto, accessKey: Key, refreshKey: Key) {
