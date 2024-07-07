@@ -2,7 +2,6 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { UserLoginDto } from '../dto/user-login.dto';
 import { Key, TokenService } from '../service/token.service';
-import * as process from 'node:process';
 import { TokenDto } from '../dto/token.dto';
 import { UserCreateDto } from '../../modules/user/dto/user-create.dto';
 
