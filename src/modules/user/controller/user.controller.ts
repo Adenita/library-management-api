@@ -14,6 +14,7 @@ import { UserListDto } from '../dto/user-list.dto';
 import { UserShortDto } from '../dto/user-short.dto';
 import { UserMapper } from '../mapper/user.mapper';
 import { User } from '../entity/user.entity';
+import { Mapper } from '../../../shared/Mapper';
 
 @Controller('users')
 export class UserController {
@@ -21,31 +22,32 @@ export class UserController {
 
   @Get()
   async findAll(): Promise<UserListDto> {
-    const users = await this.userService.findAll();
-    return { items: UserMapper.toListTransport(users) };
+    const users: User[] = await this.userService.findAll();
+    return UserMapper.toListTransport(users);
   }
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<UserShortDto> {
     const user: User = await this.userService.findByIdOrThrow(id);
-    return UserMapper.toShortDto(user);
+    return Mapper.toDto(UserShortDto, user);
   }
 
   @Post()
-  async create(@Body() UserCreateDto: UserCreateDto): Promise<UserShortDto> {
-    const userToCreate: User = UserMapper.toEntity(UserCreateDto);
-    const userCreated: User = await this.userService.createOrThrow(userToCreate);
-    return UserMapper.toShortDto(userCreated);
+  async create(@Body() userCreateDto: UserCreateDto): Promise<UserShortDto> {
+    const userToCreate: User = UserMapper.toEntity(userCreateDto);
+    const userCreated: User =
+      await this.userService.createOrThrow(userToCreate);
+    return Mapper.toDto(UserShortDto, userCreated);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() UserUpdateDto: UserUpdateDto,
+    @Body() userUpdateDto: UserUpdateDto,
   ): Promise<UserShortDto> {
-    const userToUpdate: User = UserMapper.toEntity(UserUpdateDto);
+    const userToUpdate: User = UserMapper.toEntity(userUpdateDto);
     await this.userService.updateOrThrow(id, userToUpdate);
-    return UserMapper.toShortDto(userToUpdate);
+    return Mapper.toDto(UserShortDto, userToUpdate);
   }
 
   @Delete(':id')
