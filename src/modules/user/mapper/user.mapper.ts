@@ -1,22 +1,7 @@
 import { User } from '../entity/user.entity';
 import { Mapper } from '../../../shared/Mapper';
-import { UserShortDto } from '../dto/user-short.dto';
-import { UserCreateDto } from '../dto/user-create.dto';
-import { UserUpdateDto } from '../dto/user-update.dto';
 
 export class UserMapper {
-  static toShortDto(user: User) {
-    return Mapper.toDto(UserShortDto, user);
-  }
-
-  static toCreateRequestDto(user: User) {
-    return Mapper.toDto(UserCreateDto, user);
-  }
-
-  static toUpdateRequestDto(user: User) {
-    return Mapper.toDto(UserUpdateDto, user);
-  }
-
   static toListTransport(users: User[]) {
     return users.map((user: User) => this.toShortDto(user));
   }
