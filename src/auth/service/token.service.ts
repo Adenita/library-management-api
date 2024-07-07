@@ -12,11 +12,6 @@ export type Key = {
 
 @Injectable()
 export class TokenService {
-  readonly ACCESS_SECRET_KEY: string = 'accessSecretKey';
-  readonly REFRESH_SECRET_KEY: string = 'refreshSecretKey';
-  readonly ACCESS_KEY_EXPIRATION_TIME: string = '15m';
-  readonly REFRESH_KEY_EXPIRATION_TIME: string = '7d';
-
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
