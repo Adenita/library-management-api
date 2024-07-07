@@ -7,6 +7,11 @@ import { UserService } from '../../modules/user/service/user.service';
 
 @Injectable()
 export class AuthService {
+  readonly ACCESS_SECRET_KEY: string = 'accessSecretKey';
+  readonly REFRESH_SECRET_KEY: string = 'refreshSecretKey';
+  readonly ACCESS_KEY_EXPIRATION_TIME: string = '15m';
+  readonly REFRESH_KEY_EXPIRATION_TIME: string = '7d';
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
@@ -15,15 +20,18 @@ export class AuthService {
 
   async generateAccessToken(payload: any): Promise<string> {
     return this.jwtService.sign(payload, {
-      secret: 'accessSecretKey',
-      expiresIn: '15m',
+      secret: this.ACCESS_SECRET_KEY,
+      expiresIn: this.ACCESS_KEY_EXPIRATION_TIME,
     });
   }
 
   async generateRefreshToken(user: User): Promise<string> {
     const refreshToken = this.jwtService.sign(
       { username: user.username },
-      { secret: 'refreshSecretKey', expiresIn: '7d' },
+      {
+        secret: this.REFRESH_SECRET_KEY,
+        expiresIn: this.REFRESH_KEY_EXPIRATION_TIME,
+      },
     );
 
     const sevenDaysFromNow: number = Date.now() + 7 * 24 * 60 * 60 * 1000;
@@ -38,7 +46,7 @@ export class AuthService {
 
   async verifyAccessToken(token: string): Promise<any> {
     try {
-      return this.jwtService.verify(token, { secret: 'accessSecretKey' });
+      return this.jwtService.verify(token, { secret: this.ACCESS_SECRET_KEY });
     } catch (e) {
       throw new Error('Access token verification failed');
     }
@@ -51,7 +59,7 @@ export class AuthService {
       throw new Error('Invalid refresh token');
     }
     try {
-      return this.jwtService.verify(token, { secret: 'refreshSecretKey' });
+      return this.jwtService.verify(token, { secret: this.REFRESH_SECRET_KEY });
     } catch (e) {
       throw new Error('Refresh token verification failed');
     }
