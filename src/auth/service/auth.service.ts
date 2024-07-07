@@ -7,6 +7,7 @@ import { GeneralMapper } from '../../shared/general.mapper';
 import { UserLoginDto } from '../dto/user-login.dto';
 import { TokenDto } from '../dto/token.dto';
 import * as bcrypt from 'bcryptjs';
+import { UserShortDto } from '../../modules/user/dto/user-short.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,16 +16,18 @@ export class AuthService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async register(userCreateDto: UserCreateDto): Promise<User> {
+  async register(userCreateDto: UserCreateDto): Promise<UserShortDto> {
     const hashedPassword = await bcrypt.hash(userCreateDto.password, 10);
     const newUserDto: UserCreateDto = {
       ...userCreateDto,
       password: hashedPassword,
     };
 
-    return await this.userService.createOrThrow(
+    const registeredUser = await this.userService.createOrThrow(
       GeneralMapper.toEntity(User, newUserDto),
     );
+
+    return GeneralMapper.toDto(UserShortDto, registeredUser);
   }
 
   async login(userLoginDto: UserLoginDto, accessKey: Key, refreshKey: Key) {
