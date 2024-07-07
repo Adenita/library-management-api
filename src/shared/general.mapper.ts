@@ -1,6 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 
-export class Mapper {
+export class GeneralMapper {
   static toDto<T, V>(cls: new () => T, plain: V): T {
     return plainToInstance(cls, plain);
   }

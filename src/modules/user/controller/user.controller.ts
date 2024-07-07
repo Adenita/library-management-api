@@ -14,7 +14,7 @@ import { UserListDto } from '../dto/user-list.dto';
 import { UserShortDto } from '../dto/user-short.dto';
 import { UserMapper } from '../mapper/user.mapper';
 import { User } from '../entity/user.entity';
-import { Mapper } from '../../../shared/Mapper';
+import { GeneralMapper } from '../../../shared/general.mapper';
 
 @Controller('users')
 export class UserController {
@@ -29,7 +29,7 @@ export class UserController {
   @Get(':id')
   async findById(@Param('id') id: string): Promise<UserShortDto> {
     const user: User = await this.userService.findByIdOrThrow(id);
-    return Mapper.toDto(UserShortDto, user);
+    return GeneralMapper.toDto(UserShortDto, user);
   }
 
   @Post()
@@ -37,7 +37,7 @@ export class UserController {
     const userToCreate: User = UserMapper.toEntity(userCreateDto);
     const userCreated: User =
       await this.userService.createOrThrow(userToCreate);
-    return Mapper.toDto(UserShortDto, userCreated);
+    return GeneralMapper.toDto(UserShortDto, userCreated);
   }
 
   @Patch(':id')
@@ -47,7 +47,7 @@ export class UserController {
   ): Promise<UserShortDto> {
     const userToUpdate: User = UserMapper.toEntity(userUpdateDto);
     await this.userService.updateOrThrow(id, userToUpdate);
-    return Mapper.toDto(UserShortDto, userToUpdate);
+    return GeneralMapper.toDto(UserShortDto, userToUpdate);
   }
 
   @Delete(':id')
