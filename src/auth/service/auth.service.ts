@@ -7,7 +7,6 @@ import { GeneralMapper } from '../../shared/general.mapper';
 import { UserLoginDto } from '../dto/user-login.dto';
 import { TokenDto } from '../dto/token.dto';
 import * as bcrypt from 'bcryptjs';
-import { UserShortDto } from '../../modules/user/dto/user-short.dto';
 
 @Injectable()
 export class AuthService {
