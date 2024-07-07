@@ -40,8 +40,7 @@ export class AuthController {
   async refresh(@Body() body: { refreshToken: string }): Promise<TokenDto> {
     const accessToken = await this.tokenService.refreshAccessTokenOrThrow(
       body.refreshToken,
-      this.accessKey,
-      this.refreshKey,
+      { accessKey: this.accessKey, refreshKey: this.refreshKey },
     );
 
     return { accessToken, refreshToken: body.refreshToken } as TokenDto;

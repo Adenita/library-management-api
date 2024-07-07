@@ -10,6 +10,11 @@ export type Key = {
   expiresIn: string;
 };
 
+export type AuthKeys = {
+  accessKey: Key;
+  refreshKey: Key;
+};
+
 @Injectable()
 export class TokenService {
   constructor(
@@ -77,15 +82,17 @@ export class TokenService {
 
   async refreshAccessTokenOrThrow(
     refreshToken: string,
-    refreshKey: Key,
-    accessKey: Key,
+    authKeys: AuthKeys,
   ): Promise<string> {
     const payload = await this.verifyRefreshTokenOrThrow(
       refreshToken,
-      refreshKey,
+      authKeys.refreshKey,
     );
     const user = await this.userService.findByUsernameOrThrow(payload.username);
-    return this.generateAccessToken({ username: user.username }, accessKey);
+    return this.generateAccessToken(
+      { username: user.username },
+      authKeys.accessKey,
+    );
   }
 
   async revokeRefreshToken(token: string): Promise<void> {
