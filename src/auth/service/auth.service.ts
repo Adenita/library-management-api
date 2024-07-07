@@ -5,6 +5,11 @@ import { User } from '../../modules/user/entity/user.entity';
 import { RefreshToken } from '../../modules/user/entity/refresh-token.entity';
 import { UserService } from '../../modules/user/service/user.service';
 
+export type Key = {
+  secret: string;
+  expiresIn: string;
+};
+
 @Injectable()
 export class AuthService {
   readonly ACCESS_SECRET_KEY: string = 'accessSecretKey';
@@ -18,19 +23,19 @@ export class AuthService {
     private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
-  async generateAccessToken(payload: any): Promise<string> {
+  async generateAccessToken(payload: any, accessKey: Key): Promise<string> {
     return this.jwtService.sign(payload, {
-      secret: this.ACCESS_SECRET_KEY,
-      expiresIn: this.ACCESS_KEY_EXPIRATION_TIME,
+      secret: accessKey.secret,
+      expiresIn: accessKey.expiresIn,
     });
   }
 
-  async generateRefreshToken(user: User): Promise<string> {
+  async generateRefreshToken(user: User, refreshKey: Key): Promise<string> {
     const refreshToken = this.jwtService.sign(
       { username: user.username },
       {
-        secret: this.REFRESH_SECRET_KEY,
-        expiresIn: this.REFRESH_KEY_EXPIRATION_TIME,
+        secret: refreshKey.secret,
+        expiresIn: refreshKey.expiresIn,
       },
     );
 
@@ -44,31 +49,48 @@ export class AuthService {
     return refreshToken;
   }
 
-  async verifyAccessToken(token: string): Promise<any> {
+  async verifyAccessTokenOrThrow(
+    accessToken: string,
+    accessKey: Key,
+  ): Promise<any> {
     try {
-      return this.jwtService.verify(token, { secret: this.ACCESS_SECRET_KEY });
+      return this.jwtService.verify(accessToken, {
+        secret: accessKey.secret,
+      });
     } catch (e) {
       throw new Error('Access token verification failed');
     }
   }
 
-  async verifyRefreshToken(token: string): Promise<any> {
-    const refreshToken =
-      await this.refreshTokenRepository.findOneByToken(token);
-    if (!refreshToken) {
+  async verifyRefreshTokenOrThrow(
+    refreshToken: string,
+    refreshKey: Key,
+  ): Promise<any> {
+    const existingRefreshToken =
+      await this.refreshTokenRepository.findOneByToken(refreshToken);
+    if (!existingRefreshToken) {
       throw new Error('Invalid refresh token');
     }
     try {
-      return this.jwtService.verify(token, { secret: this.REFRESH_SECRET_KEY });
+      return this.jwtService.verify(refreshToken, {
+        secret: refreshKey.secret,
+      });
     } catch (e) {
       throw new Error('Refresh token verification failed');
     }
   }
 
-  async refreshAccessTokenOrThrow(refreshToken: string): Promise<string> {
-    const payload = await this.verifyRefreshToken(refreshToken);
+  async refreshAccessTokenOrThrow(
+    refreshToken: string,
+    refreshKey: Key,
+    accessKey: Key,
+  ): Promise<string> {
+    const payload = await this.verifyRefreshTokenOrThrow(
+      refreshToken,
+      refreshKey,
+    );
     const user = await this.userService.findByUsernameOrThrow(payload.username);
-    return this.generateAccessToken({ username: user.username });
+    return this.generateAccessToken({ username: user.username }, accessKey);
   }
 
   async revokeRefreshToken(token: string): Promise<void> {
