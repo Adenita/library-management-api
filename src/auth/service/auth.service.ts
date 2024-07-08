@@ -28,16 +28,10 @@ export class AuthService {
   }
 
   async login(userLoginDto: UserLoginDto, accessKey: Key, refreshKey: Key) {
-    const user: User = await this.userService.findByIdOrThrow(
+    const user: User = await this.validateUserOrThrow(
       userLoginDto.username,
+      userLoginDto.password,
     );
-
-    if (
-      !user ||
-      !(await bcrypt.compare(userLoginDto.password, user.password))
-    ) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
 
     const accessToken: string = await this.tokenService.generateAccessToken(
       { username: user.username },
@@ -52,5 +46,15 @@ export class AuthService {
       accessToken,
       refreshToken,
     } as TokenDto;
+  }
+
+  async validateUserOrThrow(username: string, password: string): Promise<User> {
+    const user: User = await this.userService.findByIdOrThrow(username);
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return user;
   }
 }
