@@ -22,6 +22,10 @@ export class UserService {
     return user;
   }
 
+  async findByUsername(username: string): Promise<User | undefined> {
+    return this.userRepository.findByUsername(username);
+  }
+
   async findByUsernameOrThrow(username: string): Promise<User> {
     const user: User = await this.userRepository.findByUsername(username);
     if (!user) {
