@@ -1,81 +1,56 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { RefreshTokenRepository } from '../../modules/user/repository/refresh-token.repository';
-import { User } from '../../modules/user/entity/user.entity';
-import { RefreshToken } from '../../modules/user/entity/refresh-token.entity';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../../modules/user/service/user.service';
+import { Key, TokenService } from './token.service';
+import { UserCreateDto } from '../../modules/user/dto/user-create.dto';
+import { User } from '../../modules/user/entity/user.entity';
+import { GeneralMapper } from '../../shared/general.mapper';
+import { UserLoginDto } from '../dto/user-login.dto';
+import { TokenDto } from '../dto/token.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly userService: UserService,
-    private readonly refreshTokenRepository: RefreshTokenRepository,
+    private readonly tokenService: TokenService,
   ) {}
 
-  async generateAccessToken(payload: any): Promise<string> {
-    return this.jwtService.sign(payload, {
-      secret: 'accessSecretKey',
-      expiresIn: '15m',
-    });
+  async register(userCreateDto: UserCreateDto): Promise<User> {
+    const hashedPassword = await bcrypt.hash(userCreateDto.password, 10);
+    const newUserDto: UserCreateDto = {
+      ...userCreateDto,
+      password: hashedPassword,
+    };
+
+    return await this.userService.createOrThrow(
+      GeneralMapper.toEntity(User, newUserDto),
+    );
   }
 
-  async generateRefreshToken(user: User): Promise<string> {
-    const refreshToken = this.jwtService.sign(
+  async login(userLoginDto: UserLoginDto, accessKey: Key, refreshKey: Key) {
+    const user: User = await this.userService.findByIdOrThrow(
+      userLoginDto.username,
+    );
+
+    if (
+      !user ||
+      !(await bcrypt.compare(userLoginDto.password, user.password))
+    ) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const accessToken: string = await this.tokenService.generateAccessToken(
       { username: user.username },
-      { secret: 'refreshSecretKey', expiresIn: '7d' },
+      accessKey,
     );
-
-    const sevenDaysFromNow: number = Date.now() + 7 * 24 * 60 * 60 * 1000;
-    const expirationDate: Date = new Date(sevenDaysFromNow);
-
-    await this.refreshTokenRepository.save(
-      this.getRefreshToken(refreshToken, user, expirationDate),
-    );
-
-    return refreshToken;
-  }
-
-  async verifyAccessToken(token: string): Promise<any> {
-    try {
-      return this.jwtService.verify(token, { secret: 'accessSecretKey' });
-    } catch (e) {
-      throw new Error('Access token verification failed');
-    }
-  }
-
-  async verifyRefreshToken(token: string): Promise<any> {
-    const refreshToken =
-      await this.refreshTokenRepository.findOneByToken(token);
-    if (!refreshToken) {
-      throw new Error('Invalid refresh token');
-    }
-    try {
-      return this.jwtService.verify(token, { secret: 'refreshSecretKey' });
-    } catch (e) {
-      throw new Error('Refresh token verification failed');
-    }
-  }
-
-  async refreshAccessTokenOrThrow(refreshToken: string): Promise<string> {
-    const payload = await this.verifyRefreshToken(refreshToken);
-    const user = await this.userService.findByUsernameOrThrow(payload.username);
-    return this.generateAccessToken({ username: user.username });
-  }
-
-  async revokeRefreshToken(token: string): Promise<void> {
-    await this.refreshTokenRepository.deleteByToken(token);
-  }
-
-  getRefreshToken(
-    refreshToken: string,
-    user: User,
-    expirationDate: Date,
-  ): RefreshToken {
-    return {
-      token: refreshToken,
+    const refreshToken: string = await this.tokenService.generateRefreshToken(
       user,
-      expiresIn: expirationDate,
-    } as RefreshToken;
+      refreshKey,
+    );
+
+    return {
+      accessToken,
+      refreshToken,
+    } as TokenDto;
   }
 }
