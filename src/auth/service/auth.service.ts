@@ -9,8 +9,12 @@ import { UserCreateDto } from '../../modules/user/dto/user-create.dto';
 import { User } from '../../modules/user/entity/user.entity';
 import { GeneralMapper } from '../../shared/general.mapper';
 import { UserLoginDto } from '../dto/user-login.dto';
-import { TokenDto } from '../dto/token.dto';
 import * as bcrypt from 'bcryptjs';
+
+export class Token {
+  accessToken: string;
+  refreshToken: string;
+}
 
 @Injectable()
 export class AuthService {
@@ -40,7 +44,11 @@ export class AuthService {
     );
   }
 
-  async login(userLoginDto: UserLoginDto, accessKey: Key, refreshKey: Key) {
+  async login(
+    userLoginDto: UserLoginDto,
+    accessKey: Key,
+    refreshKey: Key,
+  ): Promise<Token> {
     const user: User = await this.validateUserOrThrow(
       userLoginDto.username,
       userLoginDto.password,
@@ -58,7 +66,7 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
-    } as TokenDto;
+    } as Token;
   }
 
   async validateUserOrThrow(username: string, password: string): Promise<User> {

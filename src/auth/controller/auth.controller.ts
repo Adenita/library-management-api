@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { AuthService } from '../service/auth.service';
+import { AuthService, Token } from '../service/auth.service';
 import { UserLoginDto } from '../dto/user-login.dto';
 import { Key, TokenService } from '../service/token.service';
 import { TokenDto } from '../dto/token.dto';
@@ -32,11 +32,13 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() userLoginDto: UserLoginDto): Promise<TokenDto> {
-    return this.authService.login(
+    const token: Token = await this.authService.login(
       userLoginDto,
       this.accessKey,
       this.refreshKey,
     );
+
+    return GeneralMapper.toDto(TokenDto, token);
   }
 
   @Post('refresh')
