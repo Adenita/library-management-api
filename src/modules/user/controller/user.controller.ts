@@ -6,6 +6,7 @@ import {
   Body,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { UserCreateDto } from '../dto/user-create.dto';
@@ -15,8 +16,10 @@ import { UserShortDto } from '../dto/user-short.dto';
 import { UserMapper } from '../mapper/user.mapper';
 import { User } from '../entity/user.entity';
 import { GeneralMapper } from '../../../shared/general.mapper';
+import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
