@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Inject } from '@nestjs/common';
 import { AuthService, Token } from '../service/auth.service';
 import { UserLoginDto } from '../dto/user-login.dto';
 import { Key, TokenService } from '../service/token.service';
@@ -10,18 +10,11 @@ import { GeneralMapper } from '../../shared/general.mapper';
 
 @Controller('auth')
 export class AuthController {
-  readonly accessKey: Key = {
-    secret: process.env.ACCESS_SECRET_KEY,
-    expiresIn: process.env.ACCESS_KEY_EXPIRATION_TIME,
-  };
-  readonly refreshKey: Key = {
-    secret: process.env.REFRESH_SECRET_KEY,
-    expiresIn: process.env.REFRESH_KEY_EXPIRATION_TIME,
-  };
-
   constructor(
     private readonly authService: AuthService,
     private readonly tokenService: TokenService,
+    @Inject('ACCESS_KEY') private readonly accessKey: Key,
+    @Inject('REFRESH_KEY') private readonly refreshKey: Key,
   ) {}
 
   @Post('register')
