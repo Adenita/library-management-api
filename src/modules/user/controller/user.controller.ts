@@ -17,6 +17,8 @@ import { UserMapper } from '../mapper/user.mapper';
 import { User } from '../entity/user.entity';
 import { GeneralMapper } from '../../../shared/general.mapper';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
+import { RoleType } from '../entity/role.enum';
+import { Roles } from '../../../auth/roles.guard';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -36,6 +38,7 @@ export class UserController {
   }
 
   @Post()
+  @Roles([RoleType.ADMIN])
   async create(@Body() userCreateDto: UserCreateDto): Promise<UserShortDto> {
     const userToCreate: User = UserMapper.toEntity(userCreateDto);
     const userCreated: User =
@@ -53,6 +56,7 @@ export class UserController {
     return GeneralMapper.toDto(UserShortDto, userToUpdate);
   }
 
+  @Roles([RoleType.ADMIN])
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.userService.remove(id);
