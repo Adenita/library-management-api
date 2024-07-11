@@ -11,8 +11,4 @@ export class UserMapper {
   private static toListDto(users: User[]): UserShortDto[] {
     return users.map((user: User) => GeneralMapper.toDto(UserShortDto, user));
   }
-
-  static toEntity(dto: any): User {
-    return GeneralMapper.toEntity(User, dto);
-  }
 }
