@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Author } from '../../author/entity/author.entity';
 import { Loan } from '../../loan/entity/loan.entity';
+import { CategoryType } from './category.enum';
 
 @Entity()
 export class Book {
@@ -21,6 +22,9 @@ export class Book {
 
   @Column({ length: 30 })
   language: string;
+
+  @Column({ type: 'varchar', length: 60, nullable: true })
+  category: CategoryType;
 
   @ManyToMany(() => Author, (author) => author.books)
   authors: Author[];
