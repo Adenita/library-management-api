@@ -1,5 +1,5 @@
 import { Author } from '../entity/author.entity';
-import { GeneralMapper } from '../../../shared/general.mapper';
+import { Mapper } from '../../../shared/mapper';
 import { AuthorShortDto } from '../dto/author-short.dto';
 import { AuthorListDto } from '../dto/author-list.dto';
 
@@ -10,7 +10,7 @@ export class AuthorMapper {
 
   private static toListDto(authors: Author[]): AuthorShortDto[] {
     return authors.map((author: Author) =>
-      GeneralMapper.toDto(AuthorShortDto, author),
+      Mapper.toDto(AuthorShortDto, author),
     );
   }
 }
