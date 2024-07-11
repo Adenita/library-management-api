@@ -1,5 +1,5 @@
 import { User } from '../entity/user.entity';
-import { GeneralMapper } from '../../../shared/general.mapper';
+import { Mapper } from '../../../shared/mapper';
 import { UserShortDto } from '../dto/user-short.dto';
 import { UserListDto } from '../dto/user-list.dto';
 
@@ -9,10 +9,6 @@ export class UserMapper {
   }
 
   private static toListDto(users: User[]): UserShortDto[] {
-    return users.map((user: User) => GeneralMapper.toDto(UserShortDto, user));
-  }
-
-  static toEntity(dto: any): User {
-    return GeneralMapper.toEntity(User, dto);
+    return users.map((user: User) => Mapper.toDto(UserShortDto, user));
   }
 }
