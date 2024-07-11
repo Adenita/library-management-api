@@ -7,7 +7,7 @@ import { UserService } from '../../modules/user/service/user.service';
 import { Key, TokenService } from './token.service';
 import { UserCreateDto } from '../../modules/user/dto/user-create.dto';
 import { User } from '../../modules/user/entity/user.entity';
-import { GeneralMapper } from '../../shared/general.mapper';
+import { Mapper } from '../../shared/mapper';
 import { UserLoginDto } from '../dto/user-login.dto';
 import * as bcrypt from 'bcryptjs';
 
@@ -40,7 +40,7 @@ export class AuthService {
     };
 
     return await this.userService.createOrThrow(
-      GeneralMapper.toEntity(User, newUserDto),
+      Mapper.toEntity(User, newUserDto),
     );
   }
 

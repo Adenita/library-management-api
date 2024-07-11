@@ -15,7 +15,7 @@ import { UserListDto } from '../dto/user-list.dto';
 import { UserShortDto } from '../dto/user-short.dto';
 import { UserMapper } from '../mapper/user.mapper';
 import { User } from '../entity/user.entity';
-import { GeneralMapper } from '../../../shared/general.mapper';
+import { Mapper } from '../../../shared/mapper';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { RoleType } from '../entity/role.enum';
 import { Roles } from '../../../auth/roles.guard';
@@ -34,16 +34,16 @@ export class UserController {
   @Get(':id')
   async findById(@Param('id') id: string): Promise<UserShortDto> {
     const user: User = await this.userService.findByIdOrThrow(id);
-    return GeneralMapper.toDto(UserShortDto, user);
+    return Mapper.toDto(UserShortDto, user);
   }
 
   @Post()
   @Roles([RoleType.ADMIN])
   async create(@Body() userCreateDto: UserCreateDto): Promise<UserShortDto> {
-    const userToCreate: User = UserMapper.toEntity(userCreateDto);
+    const userToCreate: User = Mapper.toEntity(User, userCreateDto);
     const userCreated: User =
       await this.userService.createOrThrow(userToCreate);
-    return GeneralMapper.toDto(UserShortDto, userCreated);
+    return Mapper.toDto(UserShortDto, userCreated);
   }
 
   @Patch(':id')
@@ -51,9 +51,9 @@ export class UserController {
     @Param('id') id: string,
     @Body() userUpdateDto: UserUpdateDto,
   ): Promise<UserShortDto> {
-    const userToUpdate: User = UserMapper.toEntity(userUpdateDto);
+    const userToUpdate: User = Mapper.toEntity(User, userUpdateDto);
     await this.userService.updateOrThrow(id, userToUpdate);
-    return GeneralMapper.toDto(UserShortDto, userToUpdate);
+    return Mapper.toDto(UserShortDto, userToUpdate);
   }
 
   @Roles([RoleType.ADMIN])

@@ -6,6 +6,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { BookModule } from './modules/book/book.module';
+import { AuthorModule } from './modules/author/author.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { BookModule } from './modules/book/book.module';
     DatabaseModule,
     AuthModule,
     UserModule,
+    AuthorModule,
     BookModule,
   ],
   controllers: [AppController],
