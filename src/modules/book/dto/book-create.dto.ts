@@ -1,5 +1,7 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { CategoryType } from '../entity/category.enum';
+import { AuthorShortDto } from '../../author/dto/author-short.dto';
+import { Type } from 'class-transformer';
 
 export class BookCreateDto {
   @IsString()
@@ -13,4 +15,8 @@ export class BookCreateDto {
   @IsEnum(CategoryType)
   @IsNotEmpty()
   category: CategoryType;
+
+  @ValidateNested()
+  @Type(() => AuthorShortDto)
+  author: AuthorShortDto;
 }
