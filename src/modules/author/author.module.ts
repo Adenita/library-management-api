@@ -7,6 +7,6 @@ import { AuthorService } from './service/author.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Author, AuthorRepository])],
   controllers: [],
-  providers: [AuthorService],
+  providers: [AuthorService, AuthorRepository],
 })
 export class AuthorModule {}
