@@ -35,7 +35,7 @@ export class UserService {
   }
 
   async createOrThrow(user: User): Promise<User> {
-    const existingUser: User = await this.findByUsernameOrThrow(user.username);
+    const existingUser: User = await this.findByUsername(user.username);
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
