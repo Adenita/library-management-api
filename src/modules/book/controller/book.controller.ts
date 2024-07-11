@@ -40,7 +40,7 @@ export class BookController {
   @Post()
   @Roles([RoleType.ADMIN, RoleType.LIBRARIAN])
   async create(@Body() bookCreateDto: BookCreateDto): Promise<BookShortDto> {
-    const bookToCreate: Book = BookMapper.toEntity(bookCreateDto);
+    const bookToCreate: Book = GeneralMapper.toEntity(Book, bookCreateDto);
     const bookCreated: Book =
       await this.bookService.createOrThrow(bookToCreate);
     return GeneralMapper.toDto(BookShortDto, bookCreated);
@@ -51,7 +51,7 @@ export class BookController {
     @Param('id') id: string,
     @Body() bookUpdateDto: BookUpdateDto,
   ): Promise<BookShortDto> {
-    const bookToUpdate: Book = BookMapper.toEntity(bookUpdateDto);
+    const bookToUpdate: Book = GeneralMapper.toEntity(Book, bookUpdateDto);
     await this.bookService.updateOrThrow(id, bookToUpdate);
     return GeneralMapper.toDto(BookShortDto, bookToUpdate);
   }

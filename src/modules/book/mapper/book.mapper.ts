@@ -11,8 +11,4 @@ export class BookMapper {
   private static toListDto(books: Book[]): BookShortDto[] {
     return books.map((book: Book) => GeneralMapper.toDto(BookShortDto, book));
   }
-
-  static toEntity(dto: any): Book {
-    return GeneralMapper.toEntity(Book, dto);
-  }
 }
