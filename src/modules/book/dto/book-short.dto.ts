@@ -16,5 +16,8 @@ export class BookShortDto {
   category: CategoryType;
 
   @Expose()
+  availableCopies: number;
+
+  @Expose()
   authors: AuthorShortDto[];
 }
