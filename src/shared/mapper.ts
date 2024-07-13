@@ -2,7 +2,7 @@ import { plainToInstance } from 'class-transformer';
 
 export class Mapper {
   static toDto<T, V>(cls: new () => T, plain: V): T {
-    return plainToInstance(cls, plain);
+    return plainToInstance(cls, plain, { excludeExtraneousValues: true });
   }
 
   static toEntity<T, V>(cls: new () => T, dto: V): T {
