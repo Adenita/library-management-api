@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { Book } from '../entity/book.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Author } from '../../author/entity/author.entity';
 
 @Injectable()
 export class BookRepository {
@@ -42,12 +43,29 @@ export class BookRepository {
       .getMany();
   }
 
-  async findBookWithTitleAndAuthors(title: string, authorIds: string[]) {
+  async findAllBooksByTitleWithAuthors(title: string): Promise<Book[]> {
     return await this.bookRepository
       .createQueryBuilder('book')
       .leftJoinAndSelect('book.authors', 'author')
       .where('book.title = :title', { title })
-      .andWhere('author.id IN (:...authorIds)', { authorIds })
       .getMany();
+  }
+
+  async findBookByTitleAndAuthors(
+    title: string,
+    authorIds: string[],
+  ): Promise<Book[]> {
+    const allBooksWithTitle: Book[] =
+      await this.findAllBooksByTitleWithAuthors(title);
+
+    return allBooksWithTitle.filter((b: Book) => {
+      const bookAuthorIds: string[] = b.authors.map(
+        (author: Author) => author.id,
+      );
+      return (
+        bookAuthorIds.length === authorIds.length &&
+        bookAuthorIds.every((id: string) => authorIds.includes(id))
+      );
+    });
   }
 }
