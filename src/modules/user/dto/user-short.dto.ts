@@ -1,5 +1,12 @@
+import { Expose } from 'class-transformer';
+
 export class UserShortDto {
+  @Expose()
+  id: string;
+
+  @Expose()
   username: string;
-  password: string;
+
+  @Expose()
   email: string;
 }
