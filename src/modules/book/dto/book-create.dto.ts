@@ -28,5 +28,5 @@ export class BookCreateDto {
 
   @ValidateNested()
   @Type(() => AuthorShortDto)
-  author: AuthorShortDto;
+  authors: AuthorShortDto[];
 }
