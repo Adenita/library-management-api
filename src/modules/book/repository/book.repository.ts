@@ -33,4 +33,12 @@ export class BookRepository {
   async remove(id: string): Promise<void> {
     await this.bookRepository.delete(id);
   }
+
+  async findAuthorBooks(authorId: string): Promise<Book[]> {
+    return await this.bookRepository
+      .createQueryBuilder('book')
+      .innerJoinAndSelect('book.author', 'author')
+      .where('author.id = :authorId', { authorId })
+      .getMany();
+  }
 }
