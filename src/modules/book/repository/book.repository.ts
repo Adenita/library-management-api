@@ -41,4 +41,13 @@ export class BookRepository {
       .where('author.id = :authorId', { authorId })
       .getMany();
   }
+
+  async findBookWithTitleAndAuthors(title: string, authorIds: string[]) {
+    return await this.bookRepository
+      .createQueryBuilder('book')
+      .leftJoinAndSelect('book.authors', 'author')
+      .where('book.title = :title', { title })
+      .andWhere('author.id IN (:...authorIds)', { authorIds })
+      .getMany();
+  }
 }
