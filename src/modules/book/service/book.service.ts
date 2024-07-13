@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { BookRepository } from '../repository/book.repository';
 import { Book } from '../entity/book.entity';
+import { Author } from '../../author/entity/author.entity';
 
 @Injectable()
 export class BookService {
@@ -31,9 +32,17 @@ export class BookService {
   }
 
   async createOrThrow(book: Book): Promise<Book> {
-    const existingBook: Book = await this.bookRepository.findById(book.id);
-    if (existingBook) {
-      throw new ConflictException('Book with this email already exists');
+    const authorIds: string[] = book.authors.map((author: Author) => author.id);
+    const booksWithSameTitleAndAuthors: Book[] =
+      await this.bookRepository.findBookByTitleAndAuthors(
+        book.title,
+        authorIds,
+      );
+
+    if (booksWithSameTitleAndAuthors.length > 0) {
+      throw new ConflictException(
+        'A book with this title and the same authors already exists',
+      );
     }
 
     return await this.bookRepository.create(book);
