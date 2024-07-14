@@ -27,13 +27,13 @@ export class BookController {
 
   @Get()
   async findAll(): Promise<BookListDto> {
-    const books: Book[] = await this.bookService.findAll();
+    const books: Book[] = await this.bookService.findAllWithAuthors();
     return BookMapper.toListTransport(books);
   }
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<BookShortDto> {
-    const book: Book = await this.bookService.findByIdOrThrow(id);
+    const book: Book = await this.bookService.findByIdWithAuthorsOrThrow(id);
     return Mapper.toDto(BookShortDto, book);
   }
 
