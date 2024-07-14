@@ -38,8 +38,13 @@ export class BookRepository {
   async findAuthorBooks(authorId: string): Promise<Book[]> {
     return await this.bookRepository
       .createQueryBuilder('book')
-      .innerJoinAndSelect('book.author', 'author')
-      .where('author.id = :authorId', { authorId })
+      .innerJoin(
+        'book.authors',
+        'authorFilter',
+        'authorFilter.id = :authorId',
+        { authorId },
+      )
+      .leftJoinAndSelect('book.authors', 'author')
       .getMany();
   }
 
