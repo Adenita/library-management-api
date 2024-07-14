@@ -70,7 +70,7 @@ export class AuthService {
   }
 
   async validateUserOrThrow(username: string, password: string): Promise<User> {
-    const user: User = await this.userService.findByIdOrThrow(username);
+    const user: User = await this.userService.findByUsername(username);
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
