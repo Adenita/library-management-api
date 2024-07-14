@@ -15,8 +15,19 @@ export class BookRepository {
     return await this.bookRepository.find();
   }
 
+  async findAllWithAuthors(): Promise<Book[]> {
+    return await this.bookRepository.find({ relations: ['authors'] });
+  }
+
   async findById(id: string): Promise<Book> {
     return await this.bookRepository.findOne({ where: { id } });
+  }
+
+  async findByIdWithAuthors(id: string): Promise<Book> {
+    return await this.bookRepository.findOne({
+      where: { id },
+      relations: ['authors'],
+    });
   }
 
   async findByTitle(title: string): Promise<Book> {
