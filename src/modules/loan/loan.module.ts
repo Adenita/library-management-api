@@ -7,6 +7,6 @@ import { LoanService } from './service/loan.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Loan, LoanRepository])],
   controllers: [],
-  providers: [LoanService],
+  providers: [LoanService, LoanRepository],
 })
 export class LoanModule {}
