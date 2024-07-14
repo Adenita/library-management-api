@@ -9,5 +9,6 @@ import { BookController } from './controller/book.controller';
   imports: [TypeOrmModule.forFeature([Book, BookRepository])],
   controllers: [BookController],
   providers: [BookService, BookRepository],
+  exports: [BookService],
 })
 export class BookModule {}
