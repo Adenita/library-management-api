@@ -1,6 +1,6 @@
 import { CategoryType } from '../entity/category.enum';
+import { Expose, Type } from 'class-transformer';
 import { AuthorShortDto } from '../../author/dto/author-short.dto';
-import { Expose } from 'class-transformer';
 
 export class BookShortDto {
   @Expose()
@@ -19,5 +19,6 @@ export class BookShortDto {
   availableCopies: number;
 
   @Expose()
+  @Type(() => AuthorShortDto)
   authors: AuthorShortDto[];
 }
