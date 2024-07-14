@@ -15,8 +15,20 @@ export class BookService {
     return await this.bookRepository.findAll();
   }
 
+  async findAllWithAuthors(): Promise<Book[]> {
+    return await this.bookRepository.findAllWithAuthors();
+  }
+
   async findByIdOrThrow(id: string): Promise<Book> {
     const book: Book = await this.bookRepository.findById(id);
+    if (!book) {
+      throw new NotFoundException(`Book with id: ${id} not found`);
+    }
+    return book;
+  }
+
+  async findByIdWithAuthorsOrThrow(id: string): Promise<Book> {
+    const book: Book = await this.bookRepository.findByIdWithAuthors(id);
     if (!book) {
       throw new NotFoundException(`Book with id: ${id} not found`);
     }
