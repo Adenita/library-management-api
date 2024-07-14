@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../../modules/user/service/user.service';
-import { RefreshTokenRepository } from '../../modules/user/repository/refresh-token.repository';
+import { RefreshTokenRepository } from '../repository/refresh-token.repository';
 import { User } from '../../modules/user/entity/user.entity';
-import { RefreshToken } from '../../modules/user/entity/refresh-token.entity';
+import { RefreshToken } from '../entity/refresh-token.entity';
 
 export type Key = {
   secret: string;
