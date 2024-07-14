@@ -13,5 +13,5 @@ export const dataSource = new DataSource({
   database: process.env.DB_DATABASE,
   logging: true,
   entities: ['./**/*.entity{.ts,.js}'],
-  migrations: ['src/database/migrations/*.{js,ts}'],
+  migrations: ['dist/database/migrations/*.js'],
 });
