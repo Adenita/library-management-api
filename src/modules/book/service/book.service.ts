@@ -59,4 +59,8 @@ export class BookService {
   async remove(id: string): Promise<void> {
     return await this.bookRepository.remove(id);
   }
+
+  async findAuthorBooks(authorId: string): Promise<Book[]> {
+    return await this.bookRepository.findAuthorBooks(authorId);
+  }
 }
