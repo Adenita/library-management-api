@@ -19,11 +19,18 @@ import { Mapper } from '../../../shared/mapper';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { Roles } from '../../../auth/roles.guard';
 import { RoleType } from '../../user/entity/role.enum';
+import { BookService } from '../../book/service/book.service';
+import { BookListDto } from '../../book/dto/book-list.dto';
+import { BookMapper } from '../../book/mapper/book.mapper';
+import { Book } from '../../book/entity/book.entity';
 
 @Controller('authors')
 @UseGuards(JwtAuthGuard)
 export class AuthorController {
-  constructor(private readonly authorService: AuthorService) {}
+  constructor(
+    private readonly authorService: AuthorService,
+    private readonly bookService: BookService,
+  ) {}
 
   @Get()
   async findAll(): Promise<AuthorListDto> {
@@ -64,5 +71,11 @@ export class AuthorController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.authorService.remove(id);
+  }
+
+  @Get(':id/books')
+  async findAuthorBooks(@Param('id') id: string): Promise<BookListDto> {
+    const books: Book[] = await this.bookService.findAuthorBooks(id);
+    return BookMapper.toListTransport(books);
   }
 }
