@@ -13,6 +13,9 @@ The application is built with a modular architecture to ensure scalability and m
  - Role-Based Access Control: Secure endpoints based on user roles.
  - Authentication: JWT-based authentication and refresh token handling.
 
+## API Documentation
+You can explore the API using Swagger UI. Here's how to access the API documentation:
+- **Swagger UI**: Visit [Swagger UI](http://localhost:3000/api) to view and interact with API endpoints.
 
 ## Set up
 ### Set up the environment variables
