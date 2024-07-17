@@ -7,7 +7,10 @@ import { UserCreateDto } from '../../modules/user/dto/user-create.dto';
 import { UserShortDto } from '../../modules/user/dto/user-short.dto';
 import { User } from '../../modules/user/entity/user.entity';
 import { Mapper } from '../../shared/mapper';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { RefreshTokenDto } from '../dto/refresh-token.dto';
 
+@ApiTags('Library')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -17,12 +20,24 @@ export class AuthController {
     @Inject('REFRESH_KEY') private readonly refreshKey: Key,
   ) {}
 
+  @ApiOperation({ summary: 'User register' })
+  @ApiResponse({
+    status: 200,
+    description: 'User successfully signed up.',
+    type: UserShortDto,
+  })
   @Post('register')
   async register(@Body() userCreateDto: UserCreateDto): Promise<UserShortDto> {
     const registeredUser: User = await this.authService.register(userCreateDto);
     return Mapper.toDto(UserShortDto, registeredUser);
   }
 
+  @ApiOperation({ summary: 'User login' })
+  @ApiResponse({
+    status: 200,
+    description: 'User successfully logged in.',
+    type: TokenDto,
+  })
   @Post('login')
   async login(@Body() userLoginDto: UserLoginDto): Promise<TokenDto> {
     const token: Token = await this.authService.login(
@@ -34,13 +49,19 @@ export class AuthController {
     return Mapper.toDto(TokenDto, token);
   }
 
+  @ApiOperation({ summary: 'Access token refresh' })
+  @ApiResponse({
+    status: 200,
+    description: 'Access token successfully refreshed.',
+    type: TokenDto,
+  })
   @Post('refresh')
-  async refresh(@Body() body: { refreshToken: string }): Promise<TokenDto> {
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenDto> {
     const accessToken = await this.tokenService.refreshAccessTokenOrThrow(
-      body.refreshToken,
+      refreshTokenDto.token,
       { accessKey: this.accessKey, refreshKey: this.refreshKey },
     );
 
-    return { accessToken, refreshToken: body.refreshToken } as TokenDto;
+    return { accessToken, refreshToken: refreshTokenDto.token } as TokenDto;
   }
 }
