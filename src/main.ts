@@ -12,7 +12,7 @@ async function bootstrap() {
       'This API allows for the management of library resources, including books, authors, and user interactions. It provides endpoints for creating, updating, retrieving, and deleting library-related data.',
     )
     .setVersion('1.0')
-    .addTag('lib')
+    .addTag('Library')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
