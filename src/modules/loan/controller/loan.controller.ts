@@ -27,13 +27,13 @@ export class LoanController {
 
   @Get()
   async findAll(): Promise<LoanListDto> {
-    const loans: Loan[] = await this.loanService.findAll();
+    const loans: Loan[] = await this.loanService.findAllWithDetails();
     return LoanMapper.toListTransport(loans);
   }
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<LoanShortDto> {
-    const loan: Loan = await this.loanService.findByIdOrThrow(id);
+    const loan: Loan = await this.loanService.findByIdWithDetails(id);
     return Mapper.toDto(LoanShortDto, loan);
   }
 
