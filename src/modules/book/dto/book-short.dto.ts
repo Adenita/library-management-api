@@ -4,6 +4,9 @@ import { AuthorShortDto } from '../../author/dto/author-short.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class BookShortDto {
+  @ApiProperty({
+    description: 'The id of the book',
+  })
   @Expose()
   id: string;
 
