@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
 import { UserService } from '../../modules/user/service/user.service';
 import { RefreshTokenRepository } from '../repository/refresh-token.repository';
 import { User } from '../../modules/user/entity/user.entity';
 import { RefreshToken } from '../entity/refresh-token.entity';
 
+export type JwtExpiration = NonNullable<JwtSignOptions['expiresIn']>;
+
 export type Key = {
   secret: string;
-  expiresIn: string;
+  expiresIn: JwtExpiration;
 };
 
 export type AuthKeys = {
